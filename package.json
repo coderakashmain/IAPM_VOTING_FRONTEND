@@ -10,8 +10,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mui/icons-material": "^7.3.2",
-    "@mui/material": "^7.3.2",
     "@tailwindcss/postcss": "^4.1.13",
     "axios": "^1.12.2",
     "axios-retry": "^4.5.0",

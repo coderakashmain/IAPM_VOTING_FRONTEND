@@ -15,14 +15,7 @@ const instance = axios.create({
   withCredentials: true,
 });
 
-/**
- * -------------------------
- *  Retry Strategy
- * -------------------------
- * - Exponential backoff
- * - Retry only safe/idempotent requests (GET/HEAD/OPTIONS)
- * - Retry on network errors or 5xx responses
- */
+
 axiosRetry(instance, {
   retries: 2,
   retryDelay: axiosRetry.exponentialDelay,
@@ -36,14 +29,7 @@ axiosRetry(instance, {
   },
 });
 
-/**
- * -------------------------
- * ⏱ Request Interceptor
- * -------------------------
- * - Attach in-memory token (safer than localStorage)
- * - Skip if headers['skip-auth'] is true
- * - Add unique request ID for tracing/logs
- */
+
 instance.interceptors.request.use(
   async (config) => {
     if (!config.headers['skip-auth']) {
@@ -60,15 +46,7 @@ instance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-/**
- * -------------------------
- *  Response Interceptor
- * -------------------------
- * - Auto refresh token on 401
- * - Skip if headers['skip-refresh'] is true
- * - Queue requests while refreshing (single-flight)
- * - Logout if refresh fails
- */
+
 let isRefreshing = false;
 let refreshQueue = [];
 
@@ -88,17 +66,17 @@ instance.interceptors.response.use(
 
     if (!response) return Promise.reject(error);
 
-    // Skip refresh if requested
+   
     if (config.headers['skip-refresh']) return Promise.reject(error);
 
-    // Handle 401 Unauthorized
+    
     if (response.status === 401 && !config._retry) {
-      config._retry = true; // prevent infinite loop
+      config._retry = true; 
 
       try {
         if (!isRefreshing) {
           isRefreshing = true;
-          const newToken = await AuthService.refreshToken(); // may throw
+          const newToken = await AuthService.refreshToken();
           flushQueue(null, newToken);
         }
 

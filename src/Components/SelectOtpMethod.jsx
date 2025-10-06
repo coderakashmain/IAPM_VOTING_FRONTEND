@@ -1,32 +1,56 @@
 import React, { useState } from "react";
 import { api } from "../APIs/apiService";
 import { useApiPromise } from "../Hooks/useApi";
-const SelectOtpMethod = React.memo(({ resultData,memberId,electionId }) => {
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from "react-router";
+import Popup from "./Popup";
+import BackButton from "./BackButton";
+const SelectOtpMethod = React.memo(() => {
     const [selectedMethod, setSelectedMethod] = useState("");
-    const {loading,error,run} = useApiPromise();
+    const [searchParams] = useSearchParams();
+    const location = useLocation();
+    const {resultData} = location?.state;
+    const token = searchParams.get('token');
+    const navigate = useNavigate();
+    const { loading, error, run } = useApiPromise();
 
+   
+
+    if(!resultData) return null;
 
     const handleChange = (e) => {
         setSelectedMethod(e.target.value);
     };
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!selectedMethod) {
             alert("Please select a method to receive OTP");
             return;
         }
-      const result = await run(() =>
-                  api.post('/auth/otpsend',{selectedMethod,memberId,electionId}, { token: false, retryOnAuthFail: false })
-              );
+        const result = await run(() =>
+            api.post(`/auth/otpsend/${token}`, { selectedMethod }, { token: false, retryOnAuthFail: false ,withCredentials:true})
+        );
+        
+        navigate({
+            pathname : '/login/verification/verifyOTP',
+            search : `?${createSearchParams({
+                token,
+                methode : selectedMethod
+            })}`
+        });
+
     };
 
     return (
+        <Popup>
+            <BackButton replace={true}  custumeNavigate={()=>{ 
+                navigate('/login',{replace : true})}} />
         <form onSubmit={handleSubmit}>
             <div className="lg:w-130 md:w-140 w-full min-h-55 max-h-100 text-black bg-white rounded-2xl p-5 py-6 flex flex-col justify-between">
-         
-                
+
+
                 <h2 className="text-xl mb-4 text-center">Select from which you want OTP</h2>
+                {error && <p className='text-center text-xs text-error'>{error}</p>}
 
                 <div className="flex justify-center gap-3 items-center text-sm">
 
@@ -57,16 +81,17 @@ const SelectOtpMethod = React.memo(({ resultData,memberId,electionId }) => {
                         <label htmlFor="email" className="select-none">{resultData[0]?.member_email}</label>
                     </div>
                 </div>
-              
+
                 <button
                     type="submit"
                     disabled={!selectedMethod}
-                    className="bg-primary btn text-white py-2 px-4 rounded  disabled:bg-gray-300"
+                    className={`bg-primary btn text-white py-2 px-4 rounded  disabled:bg-gray-300 ${ loading ? 'disabled' : ''}`}
                 >
-                    Send OTP
+                   {loading ? "Sending..." : "Send OTP"}
                 </button>
             </div>
         </form>
+        </Popup>
     );
 });
 

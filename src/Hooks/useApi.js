@@ -43,10 +43,7 @@ export function useApiPromise() {
   return { loading, error, run };
 }
 
-/**
- * Hook for RxJS Observable-based API calls
- * Automatically handles subscription, cancellation, caching
- */
+
 export function useApiObservable(observableFactory, deps = []) {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -70,19 +67,17 @@ export function useApiObservable(observableFactory, deps = []) {
     });
 
     return () => {
-      // Cancel Observable on unmount
+      
       subRef.current?.unsubscribe?.();
       subRef.current?.cancel?.();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+   
   }, deps);
 
   return { data, error, loading };
 }
 
-/**
- * Convenience hooks for GET/POST Observables
- */
+
 export function useApiGet(url, config = {}, deps = []) {
   return useApiObservable(() => api$.get(url, config), deps);
 }

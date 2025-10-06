@@ -9,8 +9,10 @@ const PostDetails = () => {
   const {data}  = location.state  || {};
   const navigate = useNavigate();
 
-  const handlenavigate  = (electionId)=>{
-    navigate('/voting',{state : {electionId}})
+  const handlenavigate  = (data)=>{
+    sessionStorage.setItem("electionId" ,data.election_id);
+    sessionStorage.setItem("postId" ,data.post_id);
+    navigate('/voting')
   }
 
   if(!data) return null;
@@ -31,7 +33,7 @@ const PostDetails = () => {
         <div className='mt-5  flex'>
        {data.active && (   <span className='bg-success text-white rounded-2xl px-3 py-1 text-xs '>Active</span>)}
 
-       <button  onClick={()=> handlenavigate(data.election_id)} className='active ml-4 text-xs font-semibold bg-primary text-white py-1 px-3 rounded-3xl cursor-pointer flex gap-1'>Let's Vote <MousePointerClick size={17} className='text-xs' /></button>
+       <button  onClick={()=> handlenavigate(data)} className='active ml-4 text-xs font-semibold bg-primary text-white py-1 px-3 rounded-3xl cursor-pointer flex gap-1'>Let's Vote <MousePointerClick size={17} className='text-xs' /></button>
 
         </div>
 

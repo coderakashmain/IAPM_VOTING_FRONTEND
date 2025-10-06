@@ -4,29 +4,19 @@ import PostDetails from './PostDetails';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { useApiPromise } from '../Hooks/useApi';
 import { api } from '../APIs/apiService';
+import { useElection } from '../Context/ElectionProvider';
 const Hero = () => {
     const { loading, error, run } = useApiPromise();
-    const [electionList,setElectionList]  = useState([]);
+    const {electionList} = useElection();
 
     const navigate = useNavigate(); 
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const result = await run(() => api.get('/vote/getallvote', { token: false }));
-              
-                setElectionList(result)
-            } catch (err) {
-                console.error('API error', err);
-            }
-        };
-        fetchData();
-    }, [])
+
 
   
     const handleNavigate = (data) => {
-        navigate(`/${data.post_name}`, { state: { data } });
+        navigate(`postdetails/${data.post_name}`, { state: { data } });
     }
 
 

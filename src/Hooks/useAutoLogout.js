@@ -1,4 +1,4 @@
-// src/hooks/useAutoLogout.js
+
 import { useEffect } from "react";
 import AuthService from "../APIs/authService";
 

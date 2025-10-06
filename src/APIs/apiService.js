@@ -4,9 +4,7 @@ import AuthService from './authService';
 import { from, defer } from 'rxjs';
 import { shareReplay } from 'rxjs/operators';
 
-/**
- * Core Promise-based API request with auto-refresh & retry on 401
- */
+
 export const apiRequest = async (
   method,
   url,
@@ -70,9 +68,7 @@ export const apiRequest = async (
   return makeRequest();
 };
 
-/**
- * Promise-based shortcut methods
- */
+
 export const api = {
   get: (url, config) => apiRequest('get', url, {}, config),
   post: (url, data, config) => apiRequest('post', url, data, config),
@@ -80,12 +76,7 @@ export const api = {
   delete: (url, config) => apiRequest('delete', url, {}, config),
 };
 
-/**
- * RxJS Observable-based API request
- * - cancelable via obs.cancel()
- * - uses defer() for lazy execution
- * - auto token from AuthService
- */
+
 const makeObservableRequest = (method, url, data = {}, config = {}) =>
   defer(() => {
     const controller = new AbortController();
@@ -115,7 +106,7 @@ const makeObservableRequest = (method, url, data = {}, config = {}) =>
 
     const obs = from(promise).pipe(shareReplay(1));
     obs.cancel = () => controller.abort();
-    return obs;
+    return obs; 
   });
 
 export const api$ = {
