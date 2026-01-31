@@ -2,10 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import { api, api$ } from "../APIs/apiService";
 
-/**
- * Hook for Promise-based API calls (GET, POST, etc.)
- * Automatically handles loading and errors
- */
+
 export function useApiPromise() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);

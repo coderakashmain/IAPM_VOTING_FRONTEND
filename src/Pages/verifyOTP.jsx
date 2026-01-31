@@ -47,20 +47,22 @@ const VerifyOTP = () => {
         <Popup>
             <BackButton replace={true} custumeNavigate={() => navigate('/login', { replace: true })} />
             <form onSubmit={handleSubmit}>
-                <div className="lg:w-130 md:w-140 w-full min-h-55 max-h-100 text-black bg-white rounded-2xl p-5 py-6 flex flex-col justify-between">
+                <div className="lg:w-130 md:w-140 w-full min-h-55 max-h-100 text-black bg-white rounded-xl shadow-sm p-5 py-6 flex flex-col justify-between">
 
 
-                    <h2 className="text-xl mb-4 text-center">Enter OTP send to your registered {methode}</h2>
+                    <h2 className="text-xl  text-center">Enter OTP send to your Registered {methode}</h2>
                     {error && <p className='text-center text-xs text-error'>{error}</p>}
 
-                    <div className="flex  justify-center">
+                    <div className="">
 
                         <input
                             type="number"
                             value={OTP}
+                            name='otp'
+                            id='otpvalue'
                             onChange={handleChange}
                             placeholder="OTP"
-                            className="w-full max-w-md px-4 py-2 border  text-black border-primary rounded-md focus:ring-2  focus:ring-blue-500 focus:outline-none"
+                            className="w-full px-4 py-2 border  text-black border-primary rounded-md focus:ring-2  focus:ring-blue-500 focus:outline-none"
                         />
 
                     </div>

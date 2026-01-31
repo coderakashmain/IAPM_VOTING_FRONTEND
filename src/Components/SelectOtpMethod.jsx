@@ -1,21 +1,23 @@
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import { api } from "../APIs/apiService";
 import { useApiPromise } from "../Hooks/useApi";
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from "react-router";
 import Popup from "./Popup";
 import BackButton from "./BackButton";
+const PageNotFound = React.lazy(() => import("../Pages/PageNotFound"));
+import Loader from "./Fallback/Loader";
 const SelectOtpMethod = React.memo(() => {
     const [selectedMethod, setSelectedMethod] = useState("");
     const [searchParams] = useSearchParams();
     const location = useLocation();
-    const {resultData} = location?.state;
+    const {resultData} = location?.state || {resultData : []} ;
     const token = searchParams.get('token');
     const navigate = useNavigate();
     const { loading, error, run } = useApiPromise();
 
    
 
-    if(!resultData) return null;
+    if(!resultData[0]) return <Suspense fallback={<Loader/>}><PageNotFound/></Suspense> ;
 
     const handleChange = (e) => {
         setSelectedMethod(e.target.value);
@@ -35,7 +37,8 @@ const SelectOtpMethod = React.memo(() => {
             pathname : '/login/verification/verifyOTP',
             search : `?${createSearchParams({
                 token,
-                methode : selectedMethod
+                methode : selectedMethod,
+                status : result.status
             })}`
         });
 
@@ -46,7 +49,7 @@ const SelectOtpMethod = React.memo(() => {
             <BackButton replace={true}  custumeNavigate={()=>{ 
                 navigate('/login',{replace : true})}} />
         <form onSubmit={handleSubmit}>
-            <div className="lg:w-130 md:w-140 w-full min-h-55 max-h-100 text-black bg-white rounded-2xl p-5 py-6 flex flex-col justify-between">
+            <div className="lg:w-130 md:w-140 w-full min-h-55 max-h-100 text-black bg-white rounded-xl shadow-sm p-5 py-6 flex flex-col justify-between">
 
 
                 <h2 className="text-xl mb-4 text-center">Select from which you want OTP</h2>
@@ -55,7 +58,7 @@ const SelectOtpMethod = React.memo(() => {
                 <div className="flex justify-center gap-3 items-center text-sm">
 
 
-                    <div className="flex items-center mb-2">
+                    <div className="flex items-center">
                         <input
                             type="radio"
                             id="phoneno"
@@ -68,7 +71,7 @@ const SelectOtpMethod = React.memo(() => {
                         <label htmlFor="phoneno" className="text-black select-none">{resultData[0]?.member_primary_mobile}</label>
                     </div>
 
-                    <div className="flex items-center mb-4">
+                    <div className="flex !items-center">
                         <input
                             type="radio"
                             id="email"

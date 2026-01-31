@@ -6,6 +6,7 @@ import { log } from '../Utils/logger';
 
 let accessToken = null; 
 let currentUser = null;
+let verifytoken = null;
 
 const AuthService = {
   
@@ -26,6 +27,15 @@ const AuthService = {
     return accessToken;
   },
 
+  setverifytoken(status) {
+    verifytoken=status;
+  },
+  getverifytoken() {
+    return verifytoken;
+  },
+
+
+
   setUser(user) {
     currentUser = user;
     if (user) {
@@ -42,6 +52,8 @@ const AuthService = {
     }
     return currentUser;
   },
+
+  
 
   getRequestId() {
     return uuidv4();

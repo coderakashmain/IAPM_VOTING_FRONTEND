@@ -20,7 +20,7 @@ const BackButton = React.memo(({ replace = false, fallback = '/',custumeNavigate
   };
 
   return (
-    <div onClick={handleNavigate} className='active fixed top-2 left-2 bg-white w-15 h-10 rounded-xl cursor-pointer text-black flex items-center justify-center z-100'>
+    <div onClick={handleNavigate} className='active fixed top-2 left-2 bg-white w-15 h-10 rounded-md shadow-sm cursor-pointer text-black flex items-center justify-center z-100'>
       <MoveLeft />
     </div>
   )

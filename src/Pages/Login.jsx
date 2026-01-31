@@ -5,7 +5,6 @@ import { useApiPromise } from '../Hooks/useApi'
 import { api } from '../APIs/apiService'
 import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router';
 import AuthService from '../APIs/authService'
-
 const Login = () => {
     const navigate = useNavigate();
     const [memberId, setMemberId] = useState('');
@@ -18,15 +17,17 @@ const Login = () => {
 
     useEffect(() => {
         AuthService.logout();
+        
     }, []);
 
 
     const handlesubmit = async (e) => {
         e.preventDefault();
-
+        
         const result = await run(() =>
             api.post('/auth/memberid', { memberId, electionId: election_id,post_id }, { token: false, retryOnAuthFail: false })
         );
+        AuthService.setverifytoken(result.token);
         navigate({
             pathname: "/login/verification",
             search: `?${createSearchParams({ token: result.token })}`
@@ -44,13 +45,13 @@ const Login = () => {
 
 
 
-    // if (!election_id) return null;
+    if (!election_id) return null;
 
     return (
         <Popup>
             <BackButton />
             
-                <div className='lg:w-130 md:w-140 w-100%  min-h-75 max-h-100  bg-white rounded-2xl p-5 flex flex-col justify-between'>
+                <div className='lg:w-130 md:w-140 w-100%  min-h-75 max-h-100  bg-white rounded-xl shadow-sm p-5 flex flex-col justify-between'>
 
                     <div>
 

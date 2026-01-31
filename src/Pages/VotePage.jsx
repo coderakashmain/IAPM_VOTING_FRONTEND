@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { api } from "../APIs/apiService";
 import { useApiPromise } from "../Hooks/useApi";
-import { Vote, CheckCircle, Info, User, Clock } from "lucide-react";
+import { Vote, CheckCircle, Info, User, Clock, ArrowBigLeft } from "lucide-react";
 import { useNavigate } from "react-router";
-
+import { useScreen } from "../Context/ScreenProvider";
 
 const VotePage = () => {
   const [electionData, setElectionData] = useState(null);
@@ -15,6 +15,7 @@ const VotePage = () => {
   const postId = sessionStorage.getItem("postId");
   const {run:voterun, error:voteerror,loading : voterloading} = useApiPromise();
   const [alreadyVoted,setAlreadyVoted] = useState(false);
+  const {isMobile}  = useScreen();
 
   
   // Fetch election data
@@ -100,25 +101,42 @@ const VotePage = () => {
 
   const { organization_name, post_name, post_about, candidates,has_voted,vote_to } = electionData;
  
+ 
+  const handleBack = ()=>{
+    navigate('..');
+  }
+
+
   return (
     <section className="min-h-screen bg-bg py-10 select-none">
       <div className="container mx-auto px-4 sm:px-8 text-text">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-card p-6 mb-6 text-center border border-gray-200">
-          <h1 className="text-3xl font-bold text-primary mb-2 flex items-center justify-center gap-2">
-            <Vote className="w-7 h-7 text-primary" />
+        <div className=" rounded-lg  mb-6 ">
+          <div className={ ` ${!isMobile ? "flex items-center justify-between " : ""}`}>
+          <div className="flex justify-between items-center flex-1 mb-3 ">
+
+          <h1 className="text-xl lg:text-3xl md:text-2xl font-bold flex items-center  gap-2">
+            {/* <Vote className="w-7 h-7 " /> */}
             {organization_name}
           </h1>
-          <h2 className="text-xl font-semibold text-text mb-2">{post_name}</h2>
-          <p className="text-sm opacity-80 max-w-2xl mx-auto mb-4">{post_about}</p>
+          {isMobile && (<p onClick={handleBack} className="flex items-center  gap-2 text-xs md:text-sm cursor-pointer"><ArrowBigLeft/> Back</p>  )}
+          </div>
+          <div className="flex gap-2">
+          {!isMobile && (<p onClick={handleBack} className="flex items-center  gap-2 text-xs md:text-sm cursor-pointer"><ArrowBigLeft/> Back</p>  )}  
 
-          {/* Countdown */}
-          <div className={`flex items-center justify-center gap-2 text-sm text-white ${electionEnded ? "bg-error" :'bg-primary'} px-4 py-1 rounded-full w-max mx-auto`}>
+           <div className={`flex items-center  gap-2 text-xs text-alwaysWhite ${electionEnded ? "bg-error" :'bg-primary'} px-4 py-1 rounded-full w-max `}>
             <Clock className="w-4 h-4" />
             {timeLeft}
           </div>
-          {has_voted || alreadyVoted ? (<div className={`mt-3 text-sm text-white  inline-flex py-1 px-3 rounded-sm ${alreadyVoted ? "bg-primary" : "bg-error"} `}>
-            <p className="text-white"> {alreadyVoted ? "Vote  recorded" : "You already voted."} </p>
+          </div>
+          </div>
+          <h2 className="text-md md:text-xl font-semibold text-text text-start mb-2 mt-4">{post_name}</h2>
+          <p className="text-xs md:text-sm opacity-80 max-w-2xl  mb-4">{post_about}</p>
+
+          {/* Countdown */}
+         
+          {has_voted || alreadyVoted ? (<div className={`mt-3  text-sm text-white  `}>
+            <p className={`text-alwaysWhite inline-block  py-1 px-3 rounded-sm ${alreadyVoted ? "bg-primary" : "bg-error"}`}> {alreadyVoted ? "Vote  recorded" : "You already voted."} </p>
           </div>) : ("")}
           {voteerror && (<p className="mt-3 text-sm text-error ">{voteerror}</p>)}
         </div>
@@ -143,7 +161,7 @@ const VotePage = () => {
                     className="w-24 h-24 rounded-full object-cover border-2 border-primary shadow-md"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-white text-4xl font-bold shadow-md">
+                  <div className="w-24 h-24 rounded-full bg-primary flex items-center justify-center text-alwaysWhite text-4xl font-bold shadow-md">
                     <User className="w-12 h-12" />
                   </div>
                 )}
@@ -176,7 +194,7 @@ const VotePage = () => {
                     onClick={() => handleVote(c.candidate_id)}
                     disabled={electionEnded || has_voted || voterloading}
                     className={`w-full flex items-center justify-center gap-2 py-2  rounded-full font-semibold transition-all duration-200 ${
-                      selectedCandidate || vote_to === c.candidate_id
+                      (selectedCandidate || vote_to ) === c.candidate_id
                         ? "bg-primary text-white" 
                         : electionEnded || has_voted || voterloading
                         ? "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -184,10 +202,10 @@ const VotePage = () => {
                     }`}
                   >
                     {selectedCandidate || vote_to === c.candidate_id ? (
-                      <>
-                        <CheckCircle className="w-5 h-5" />
+                      <span className="flex items-center gap-2 text-alwaysWhite">
+                        <CheckCircle className="w-5 h-5 text-alwaysWhite" />
                         Voted
-                      </>
+                      </span>
                     ) : electionEnded ? (
                       "Voting Closed"
                     ) : (
@@ -202,7 +220,7 @@ const VotePage = () => {
 
               {/* Selected Badge */}
               {(selectedCandidate || vote_to) === c.candidate_id && (
-                <div className="absolute top-3 right-3 bg-primary text-white text-xs px-3 py-1 rounded-full shadow-md">
+                <div className="absolute top-3 right-3 bg-primary text-alwaysWhite text-xs px-3 py-1 rounded-full shadow-md">
                   Selected
                 </div>
               )}

@@ -7,49 +7,112 @@ import Loader from './Components/Fallback/Loader'
 import LoginPrivateRouter from './Router/LoginPrivateRouter'
 import VerifyOTP from './Pages/verifyOTP'
 import { ElectionProvider } from './Context/ElectionProvider'
+import ScreenProvider from './Context/ScreenProvider'
+import HeaderRouter from './Router/HeaderRouter'
+import MobileRouter from './Router/MobileRouter'
+import Home from './Pages/Home'
+import AdminRouter from './Router/AdminRouter'
 
+
+
+const AdminLogin = lazy(() => import('./Pages/Admin/AdminLogin'))
+const AdminPanel = lazy(() => import('./Pages/Admin/AdminPanel'))
 const PageNotFound = lazy(() => import('./Pages/PageNotFound'))
 const SelectOtpMethod = lazy(() => import('./Components/SelectOtpMethod'))
 const Login = lazy(() => import('./Pages/Login'))
 const VotePage = lazy(() => import('./Pages/VotePage'))
 const DefaultPage = lazy(() => import('./Pages/DefaultPage'))
 const PostDetails = lazy(() => import('./Components/PostDetails'))
-const Home = lazy(() => import('./Pages/Home'))
 
 function App() {
   const router = createBrowserRouter([
     {
       path: '/',
       element: (
-        <ElectionProvider>
+
+        <ScreenProvider>
           <IndexRouter />
-        </ElectionProvider>
+        </ScreenProvider>
       ),
       children: [
         {
           path: '',
-          element: (
-            <Suspense fallback={<Loader />}>
-              <Home />
-            </Suspense>
-          ),
+          element: <ElectionProvider><HeaderRouter /></ElectionProvider>,
           children: [
             {
               path: '',
-              element: <DefaultPage />,
+              element: (
+
+                <Home />
+
+              ),
+              children: [
+                {
+                  path: '',
+                  element: <DefaultPage />,
+                },
+                {
+                  path: 'postdetails/:postname',
+                  element: (
+                    <Suspense fallback={<Loader />}>
+                      <PostDetails />
+                    </Suspense>
+                  ),
+                },
+              ],
             },
             {
-              path: 'postdetails/:postname', 
-              element: (
-                <Suspense fallback={<Loader />}>
-                  <PostDetails />
-                </Suspense>
-              ),
+              path: 'voting',
+              element: <PrivateRouter />,
+              children: [
+                {
+                  path: '',
+                  element: (
+                    <Suspense fallback={<Loader />}>
+                      <VotePage />
+                    </Suspense>
+                  ),
+                },
+              ],
             },
-          ],
+            {
+              path: 'postdetails/m/:postname',
+              element: <MobileRouter />,
+              children: [{
+                path: '',
+                element: (
+                  <Suspense fallback={<Loader />}>
+                    <PostDetails />
+                  </Suspense>
+                ),
+              }]
+            },
+
+            {
+              path: "autherizedadminpanel",
+              element: <AdminRouter />,
+              children: [
+                {
+                  path: '',
+                  element: <Suspense fallback={<Loader />}><AdminPanel /></Suspense>
+                }
+              ]
+
+            },
+
+          ]
+
         },
         {
-          path: 'login', 
+          path: "autherizedadminpanel/login",
+          element: <Suspense fallback={<Loader />}><AdminLogin /></Suspense>
+
+        },
+
+
+
+        {
+          path: 'login',
           element: (
             <Suspense fallback={<Loader />}>
               <Login />
@@ -57,7 +120,7 @@ function App() {
           ),
         },
         {
-          path: 'login/verification', 
+          path: 'login/verification',
           element: <LoginPrivateRouter />,
           children: [
             {
@@ -78,22 +141,11 @@ function App() {
             },
           ],
         },
+
+
+
         {
-          path: 'voting', 
-          element: <PrivateRouter />,
-          children: [
-            {
-              path: '',
-              element: (
-                <Suspense fallback={<Loader />}>
-                  <VotePage />
-                </Suspense>
-              ),
-            },
-          ],
-        },
-        {
-          path: '*', 
+          path: '*',
           element: (
             <Suspense fallback={<Loader />}>
               <PageNotFound />

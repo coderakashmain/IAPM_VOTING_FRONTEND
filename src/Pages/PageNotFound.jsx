@@ -5,11 +5,12 @@ const PageNotFound = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#0a0a0a] text-white">
-      <div className="bg-[#1a1a1a] p-8 rounded-2xl shadow-2xl text-center max-w-md">
+    <div className="bg-bg ">
+      <div className="container flex flex-col items-center justify-center min-h-screen">
+      <div className="bg-white p-8 rounded-2xl shadow-md sm:shadow-2xl text-center max-w-md">
         <h1 className="text-6xl text-error font-bold text-dangar mb-4">404</h1>
-        <h2 className="text-3xl text-white  font-semibold mb-2">Page Not Found</h2>
-        <p className="text-white mb-6">
+        <h2 className="text-3xl   font-semibold mb-2">Page Not Found</h2>
+        <p className="text-gray-400  mb-6">
           Oops! The page you’re looking for doesn’t exist or has been moved.
         </p>
         <button
@@ -18,6 +19,7 @@ const PageNotFound = () => {
         >
           Go to Home
         </button>
+      </div>
       </div>
     </div>
   );

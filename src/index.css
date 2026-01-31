@@ -11,8 +11,10 @@
   --color-text: rgb(15, 23, 42);         /* slate-900 */
   --color-black: rgb(15, 23, 42) ;
   --color-white: rgb(255, 255, 255);
+  --color-gray : #e2e2e2 ;
    --color-lightColor : rgba(17, 17, 17, 0.242);
-  --color-primary: rgb(62, 135, 225);     /* blue-600 */
+ --color-primary: linear-gradient(to right, #602de1, #349ff1);
+  --text-primary: rgb(62, 135, 225);     /* blue-600 */
   --color-secondary: rgb(16, 185, 129);  /* emerald-500 */
   --color-success: rgb(22, 163, 74);     /* green-600 */
   --color-warning: rgb(245, 158, 11);    /* amber-500 */
@@ -37,28 +39,48 @@
   --font-mono: "Fira Code", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+
+  :root.dark {
  --color-bg: rgb(15, 23, 42);         /* slate-900 */
     --color-text: rgb(241, 245, 249);    /* slate-100 */
      --color-black: rgb(255, 255, 255);
-     --color-lightColor : rgba(17, 17, 17, 0.242);
+      --color-gray :#010101;
+     --color-lightColor : rgba(10, 12, 20, 0.892);
   --color-white: rgb(0, 0, 0);
-    --color-primary: rgb(96, 165, 250);  /* blue-400 */
+   --color-primary: linear-gradient(to right, #602de1, #349ff1);
+    --text-primary: rgb(62, 135, 225);
     --color-secondary: rgb(52, 211, 153);/* emerald-400 */
     --color-success: rgb(134, 239, 172); /* green-400 */
     --color-warning: rgb(253, 224, 71);  /* amber-400 */
     --color-error: rgb(248, 113, 113);   /* red-400 */
     --color-info: rgb(56, 189, 248);     /* sky-400 */
+
+     /* Shadows */
+  --shadow-soft: 0 2px  8px rgba(36, 68, 95, 0.06);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.1);
+
+  /* Border radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont,
+               "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+               sans-serif;
+  --font-mono: "Fira Code", monospace;
   }
-}
+
 
 
 
 /* Backgrounds */
 .bg-bg         { background-color: var(--color-bg) }
 .bg-white         { background-color: var(--color-white) }
-.bg-primary    { background-color: var(--color-primary) }
+.bg-gray         { background-color: var(--color-gray) }
+.bg-primary    { background: var(--color-primary) }
 .bg-lightColor    { background-color: var(--color-lightColor) }
 .bg-secondary  { background-color: var(--color-secondary) }
 .bg-success    { background-color: var(--color-success) }
@@ -69,8 +91,10 @@
 /* Text */
 .text-text     { color: var(--color-text) }
 .text-white     { color: var(--color-white) }
+.text-alwaysWhite { color: #ffffff}
 .text-black     { color: var(--color-black) }
-.text-primary  { color: var(--color-primary) }
+.text-gray     { color: var(--color-gray) }
+.text-primary  { color: var(--text-primary) }
 .text-secondary{ color: var(--color-secondary) }
 .text-success  { color: var(--color-success) }
 .text-warning  { color: var(--color-warning) }
@@ -91,9 +115,9 @@
 
 
 /* border */
-.border-primary {border-color:  var(--color-primary)}
+.border-primary {border-color:  var(--text-primary)}
 .border-bg {border-color:  var(--color-bg)}
-
+.border-gray{border-color : var(--color-gray)}
 /* =============================
    Global Styles
    ============================= */
@@ -105,6 +129,7 @@ html {
 body {
   /* background-color: var(--color-bg); */
   color: var(--color-text);
+  background-color: var(--color-white);
   font-feature-settings: "kern";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -186,7 +211,7 @@ input {
   font-weight: 500;
   font-size: 1rem;
   cursor: pointer !important;
-  background-color: var(--color-primary);
+  /* background-color: var(--color-primary); */
   color: white;
   transition: all 0.2s ease-in-out;
   border: none;

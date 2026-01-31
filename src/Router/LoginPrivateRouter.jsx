@@ -4,11 +4,12 @@ import api from '../APIs/apiService';
 import { useApiPromise } from '../Hooks/useApi';
 import Loader from '../Components/Fallback/Loader';
 const SessionExpired = lazy(() => import('../Pages/SessionExpired'))
+import AuthService from '../APIs/authService';
 
 const LoginPrivateRouter = () => {
   const { run, error, loading } = useApiPromise();
   const [isAuthenticated, setIsAuthenticated] = useState(null);
-  const navigate = useNavigate();
+   const verifytoken =AuthService.getverifytoken();
 
   useEffect(() => {
     const checkLogin = async () => {
@@ -37,7 +38,7 @@ const LoginPrivateRouter = () => {
     return <Loader />;
   }
 
-  if (error || isAuthenticated === false) {
+  if (error || isAuthenticated === false || !verifytoken) {
     return <Suspense fallback={<Loader/>}><SessionExpired/></Suspense> ;
   }
 

@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react'
-import Header from '../Components/Header'
-import Hero from '../Components/Hero'
+import React, { lazy, Suspense, useEffect } from 'react'
+const Hero = lazy(() => import('../Components/Hero'))
 import AuthService from '../APIs/authService'
+import Loader from '../Components/Fallback/Loader'
+import { Outlet } from 'react-router'
 
 
 const Home = () => {
-  useEffect(()=>{
+  useEffect(() => {
     AuthService.logout();
-  },[])
+  }, [])
   return (
     <>
-      <Header />
-      <Hero />
+      <Suspense fallback={<Loader />}>
+        <Hero />
+      </Suspense>
     </>
   )
 }
